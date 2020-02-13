@@ -1,0 +1,9 @@
+NAME = "Snake"
+FONT = "Arial"
+FPS = 10
+HORZ_TILES = 12  # 10 plus border
+VERT_TILES = 12  # 10 plus border
+SCREEN_WIDTH = 420
+SCREEN_HEIGHT = 420
+SCREEN_DEPTH = 32
+SCORES_PATH = 'scores'
