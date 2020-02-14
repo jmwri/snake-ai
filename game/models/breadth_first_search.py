@@ -25,12 +25,22 @@ class BreadthFirstSearch(AbstractModel):
         )
 
     def next_action(self, environment: Environment) -> act.Action:
-        # Search for path for fruit. Returned vector has the next vector.
-        fruit_vector = self._search_from(environment, environment.snake.head())
-        if fruit_vector is None:
+        next_vectors = self.find_next_vectors(environment)
+        if not next_vectors:
             # If we didn't find the fruit, continue straight in hopes a path
             # will be available next tick
             return environment.snake.action
+        next_vector = next_vectors[0]
+        # We have the next vector we want to move into
+        # Map it to the appropriate action for the snake
+        return act.vector_to_action(next_vector)
+
+    def find_next_vectors(self, environment: Environment
+                          ) -> Optional[List[Vector]]:
+        # Search for path for fruit. Returned vector has the next vector.
+        fruit_vector = self._search_from(environment, environment.snake.head())
+        if fruit_vector is None:
+            return None
         vector_steps = []
 
         # Traverse backwards from the fruit towards to snake
@@ -47,9 +57,9 @@ class BreadthFirstSearch(AbstractModel):
                 # Our only vector that is not owned is the starting point
                 break
 
-        # We traversed from fruit to snake, so we want the last element
-        # Return the action that vector maps to
-        return act.vector_to_action(vector_steps[-1])
+        # We traversed from fruit to snake, so reverse the list
+        vector_steps.reverse()
+        return vector_steps
 
     def _search_from(self, env: Environment, start_vector: Vector
                      ) -> Optional[OwnedVector]:
