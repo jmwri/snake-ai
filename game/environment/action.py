@@ -19,3 +19,9 @@ DOWN = Action(Vector(0, 1), "down")
 ALL = (
     LEFT, UP, RIGHT, DOWN,
 )
+
+
+def vector_to_action(vector: Vector) -> Action:
+    for a in ALL:
+        if a.vector == vector:
+            return a

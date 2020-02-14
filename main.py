@@ -5,11 +5,13 @@ import pygame
 
 from game.game import Game
 from game import constants
+from game.models.breadth_first_search import BreadthFirstSearch
 from game.models.human import HumanSolver
 from game.scores import ScoreLogger
 
 models = [
     HumanSolver(),
+    BreadthFirstSearch(),
 ]
 
 

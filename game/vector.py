@@ -18,6 +18,15 @@ class Vector:
     def is_reverse(self, other: 'Vector') -> bool:
         return self.reverse() == other
 
+    def __add__(self, other: 'Vector'):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other: 'Vector'):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def __str__(self):
+        return f'x: {self.x} y: {self.y}'
+
 
 def within_distance(vector: Vector, distance: int) -> bool:
     """

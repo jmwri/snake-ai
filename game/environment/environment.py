@@ -142,3 +142,8 @@ class Environment:
 
     def won(self) -> bool:
         return self.reward() == self._available_tiles_count()
+
+    def tile_at(self, vector: Vector) -> Optional[tile.Tile]:
+        if 0 <= vector.y < self._height and 0 <= vector.x < self._width:
+            return self._tiles[vector.y][vector.x]
+        return None
