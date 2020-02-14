@@ -12,16 +12,16 @@ class OwnedVector(Vector):
         self.owner = owner
 
 
-class BreadthFirstSearch(AbstractModel):
+class BreadthFirstSearchShortestPath(AbstractModel):
     """
     https://en.wikipedia.org/wiki/Breadth-first_search
     """
 
     def __init__(self):
         super().__init__(
-            "Breadth First Search",
-            "breadth_first_search",
-            "bfs"
+            "Breadth First Search Shortest",
+            "breadth_first_search_shortest",
+            "bfss"
         )
 
     def next_action(self, environment: Environment) -> act.Action:
