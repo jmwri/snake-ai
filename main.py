@@ -22,6 +22,9 @@ def args():
             help=model.long_name,
             action="store_true"
         )
+
+    parser.add_argument("-fps", "--fps", type=int, default=constants.FPS,
+                        help="Frames per second")
     return parser.parse_args()
 
 
@@ -40,7 +43,7 @@ if __name__ == '__main__':
 
     g = Game(
         game_model=selected_game_model,
-        fps=constants.FPS,
+        fps=args.fps,
         horizontal_tiles=constants.HORZ_TILES,
         vertical_tiles=constants.VERT_TILES,
         screen_width=constants.SCREEN_WIDTH,
