@@ -25,18 +25,19 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         )
 
     def next_action(self, environment: Environment) -> act.Action:
-        next_vectors = self.find_next_vectors(environment)
+        next_vectors = self.shortest_path(environment)
         if not next_vectors:
             # If we didn't find the fruit, continue straight in hopes a path
             # will be available next tick
             return environment.snake.action
-        next_vector = next_vectors[0]
+        next_steps = self.to_direction_vectors(next_vectors)
+        next_step = next_steps[0]
         # We have the next vector we want to move into
         # Map it to the appropriate action for the snake
-        return act.vector_to_action(next_vector)
+        return act.vector_to_action(next_step)
 
-    def find_next_vectors(self, environment: Environment
-                          ) -> Optional[List[Vector]]:
+    def shortest_path(self, environment: Environment
+                      ) -> Optional[List[Vector]]:
         # Search for path for fruit. Returned vector has the next vector.
         fruit_vector = self._search_from(environment, environment.snake.head())
         if fruit_vector is None:
@@ -44,22 +45,23 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         vector_steps = []
 
         # Traverse backwards from the fruit towards to snake
-        current_step = fruit_vector.owner
-        previous_step = fruit_vector
+        current_step = fruit_vector
         while True:
-            # Get the directional vector from
-            directional_vector = previous_step - current_step
-            vector_steps.append(directional_vector)
+            vector_steps.append(Vector(current_step.x, current_step.y))
             if isinstance(current_step, OwnedVector):
-                previous_step = current_step
                 current_step = current_step.owner
             else:
-                # Our only vector that is not owned is the starting point
                 break
 
         # We traversed from fruit to snake, so reverse the list
         vector_steps.reverse()
         return vector_steps
+
+    def to_direction_vectors(self, vectors: List[Vector]) -> List[Vector]:
+        directional_vectors = []
+        for i in range(1, len(vectors)):
+            directional_vectors.append(vectors[i] - vectors[i-1])
+        return directional_vectors
 
     def _search_from(self, env: Environment, start_vector: Vector
                      ) -> Optional[OwnedVector]:
