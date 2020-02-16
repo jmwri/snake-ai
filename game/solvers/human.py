@@ -1,4 +1,4 @@
-from game.models.abstract import AbstractModel
+from game.solvers.abstract import AbstractModel
 from game.environment import action as act
 from game.environment.environment import Environment
 from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT

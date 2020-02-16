@@ -1,7 +1,7 @@
-from game.models.abstract import AbstractModel
+from game.solvers.abstract import AbstractModel
 from game.environment import action as act
 from game.environment.environment import Environment
-from game.models.breadth_first_search_longest import \
+from game.solvers.breadth_first_search_longest import \
     BreadthFirstSearchLongestPath
 from game.vector import Vector
 

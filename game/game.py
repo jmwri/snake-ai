@@ -6,7 +6,7 @@ from pygame.surface import Surface
 from pygame.locals import QUIT, KEYDOWN
 
 from game import colour
-from game.models.abstract import AbstractModel
+from game.solvers.abstract import AbstractModel
 from game.scores import ScoreLogger
 from game.screen_object import SnakeScreenObject, FruitScreenObject, \
     WallScreenObject

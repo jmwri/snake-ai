@@ -1,9 +1,9 @@
 from typing import List, Optional
 
-from game.models.abstract import AbstractModel
+from game.solvers.abstract import AbstractModel
 from game.environment import action as act, tile
 from game.environment.environment import Environment
-from game.models.breadth_first_search_shortest import \
+from game.solvers.breadth_first_search_shortest import \
     BreadthFirstSearchShortestPath
 from game.vector import Vector
 
