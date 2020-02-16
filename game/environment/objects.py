@@ -38,6 +38,9 @@ class Snake(Object):
     def head(self) -> Vector:
         return self._vectors[0]
 
+    def tail(self) -> Vector:
+        return self._vectors[len(self._vectors) - 1]
+
     def length(self) -> int:
         return len(self._vectors)
 

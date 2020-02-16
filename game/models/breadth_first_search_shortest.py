@@ -25,7 +25,11 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         )
 
     def next_action(self, environment: Environment) -> act.Action:
-        next_vectors = self.shortest_path(environment)
+        next_vectors = self.shortest_path(
+            environment,
+            environment.snake.head(),
+            environment.fruit.get_vector()
+        )
         if not next_vectors:
             # If we didn't find the fruit, continue straight in hopes a path
             # will be available next tick
@@ -36,10 +40,10 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         # Map it to the appropriate action for the snake
         return act.vector_to_action(next_step)
 
-    def shortest_path(self, environment: Environment
-                      ) -> Optional[List[Vector]]:
+    def shortest_path(self, environment: Environment, from_vector: Vector,
+                      to_vector: Vector) -> Optional[List[Vector]]:
         # Search for path for fruit. Returned vector has the next vector.
-        fruit_vector = self._search_from(environment, environment.snake.head())
+        fruit_vector = self._search_from(environment, from_vector, to_vector)
         if fruit_vector is None:
             return None
         vector_steps = []
@@ -63,17 +67,16 @@ class BreadthFirstSearchShortestPath(AbstractModel):
             directional_vectors.append(vectors[i] - vectors[i-1])
         return directional_vectors
 
-    def _search_from(self, env: Environment, start_vector: Vector
-                     ) -> Optional[OwnedVector]:
+    def _search_from(self, env: Environment, start_vector: Vector,
+                     end_vector: Vector) -> Optional[OwnedVector]:
         seen_vectors = [start_vector]  # Don't process more than once
         queue = [start_vector]  # First-in-first-out queue
 
         while queue:
             # Get the first vector from the queue
             vector = queue.pop(0)
-            # Check if the tile at the vector is the fruit
-            t = env.tile_at(vector)
-            if t == tile.FRUIT:
+            # Check if the tile at the vector is the goal
+            if vector == end_vector:
                 return vector
             # Get adjacent vectors that we haven't seen yet
             adjacent_vectors = self._unseen_adjacent_vectors(
