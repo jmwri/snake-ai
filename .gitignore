@@ -133,3 +133,4 @@ dmypy.json
 
 # Program specific
 scores
+*.hdf5

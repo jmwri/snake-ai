@@ -19,6 +19,12 @@ class AbstractModel(ABC):
         """
         pass
 
+    def after_action(self, environment: Environment, terminal: bool):
+        """
+        Evaluate the environment after our last action
+        """
+        pass
+
     def user_input(self, event: Event):
         """
         Key presses will be detected here.
