@@ -1,5 +1,4 @@
 import datetime
-import os
 
 import numpy as np
 
@@ -40,7 +39,7 @@ class Stats:
     def __init__(self, episodes: int = 0, moves_without_death: int = 0,
                  moves_with_death: int = 0, moves_to_fruit: int = 0,
                  moves_from_fruit: int = 0, ate_fruit: int = 0,
-                 loss: float = 0.0):
+                 loss: float = 0.0, epsilon: float = 0.0):
         self.episodes = episodes
         self.moves_without_death = moves_without_death
         self.moves_with_death = moves_with_death
@@ -48,6 +47,7 @@ class Stats:
         self.moves_from_fruit = moves_from_fruit
         self.ate_fruit = ate_fruit
         self.loss = loss
+        self.epsilon = epsilon
         self.scores = []
 
     def render(self):
@@ -60,6 +60,7 @@ class Stats:
     Fruit eaten: {self.ate_fruit}
     Mean score: {sum(self.scores) / len(self.scores)}
     Loss: {self.loss}
+    Epsilon: {self.epsilon}
         ''')
 
     def reset(self):
@@ -71,6 +72,7 @@ class Stats:
         self.ate_fruit = 0
         self.scores = []
         self.loss = 0.0
+        self.epsilon = 0.0
 
 
 class DeepQLearning(AbstractModel):
@@ -80,9 +82,8 @@ class DeepQLearning(AbstractModel):
             "deep_q_learning",
             "dqn"
         )
-        self._agent = DQNAgent(Observation.len(), len(act.ALL), 2000)
-        if os.path.exists('DRN.hdf5'):
-            self._agent.load('DRN.hdf5')
+        self._agent = DQNAgent(Observation.len(), 3, 2000)
+        self._agent.load('DRN')
         self._before_state = None
         self._before_action = None
         self._before_reward = None
@@ -104,12 +105,27 @@ class DeepQLearning(AbstractModel):
         self._move_i += 1
         self._replay_counter += 1
 
+        possible_actions = [
+            act.action_to_relative_left(self._before_action),
+            self._before_action,
+            act.action_to_relative_right(self._before_action),
+        ]
+
         action = self._agent.act(
-            np.reshape(self._before_state.as_list(),
-                       (1, self._before_state.len())), )
-        return act.ALL[action]
+            np.reshape(
+                self._before_state.as_list(),
+                (1, self._before_state.len())
+            ),
+        )
+
+        return possible_actions[action]
 
     def after_action(self, environment: Environment, terminal: bool):
+        possible_actions = [
+            act.action_to_relative_left(self._before_action),
+            self._before_action,
+            act.action_to_relative_right(self._before_action),
+        ]
         after_state = self._observe(environment)
         reward = environment.reward() - self._before_reward
         if environment.reward() > self._before_reward:
@@ -130,7 +146,7 @@ class DeepQLearning(AbstractModel):
             self._stats.moves_from_fruit += 1
             reward = -10
 
-        action_index = act.ALL.index(environment.snake.action)
+        action_index = possible_actions.index(environment.snake.action)
 
         done = terminal or environment.won()
         shaped_before_state = np.reshape(self._before_state.as_list(),
@@ -151,17 +167,12 @@ class DeepQLearning(AbstractModel):
                 loss = self._agent.replay(500)
                 self._agent.update_target_network()
                 self._stats.loss = loss
-                self._agent.save('DRN.hdf5')
+                self._stats.epsilon = self._agent.epsilon
+                self._agent.save('DRN')
                 self._stats.render()
                 self._stats.reset()
 
     def _observe(self, env: Environment) -> Observation:
-        # TODO: Change to:
-        # - Relative left is empty
-        # - Relative front is empty
-        # - Relative right is empty
-        # - Relative angle to fruit (-1, 0, 1)
-
         direction = env.snake.action
 
         left_action = act.action_to_relative_left(direction)

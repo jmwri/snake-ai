@@ -1,3 +1,4 @@
+PyYAML
 pygame==2.0.0.dev4
 tensorflow==2.1.0
 numpy
