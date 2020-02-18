@@ -34,8 +34,8 @@ class DQNAgent:
         )
         return network
 
-    def memorize(self, state: list, action: int, reward: float,
-                 next_state: list, done: int):
+    def memorize(self, state: np.ndarray, action: int, reward: float,
+                 next_state: np.ndarray, done: int):
         self.memory.append((state, action, reward, next_state, done))
 
     def act(self, state):
