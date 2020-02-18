@@ -1,5 +1,8 @@
 import random
 from typing import Optional, List
+
+import numpy as np
+
 from game.environment import action as act, tile
 from game.environment.objects import Snake, Fruit, Object
 from game.vector import Vector, within_distance, is_diagonal
@@ -147,3 +150,10 @@ class Environment:
         if 0 <= vector.y < self._height and 0 <= vector.x < self._width:
             return self._tiles[vector.y][vector.x]
         return None
+
+    def observe(self) -> np.ndarray:
+        tiles_1d = []
+        for row in self._tiles:
+            for t in row:
+                tiles_1d.append(t.value)
+        return np.array(tiles_1d).reshape(1, self._width * self._height)

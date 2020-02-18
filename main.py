@@ -20,7 +20,7 @@ models = [
     BreadthFirstSearchShortestPath(),
     BreadthFirstSearchLongestPath(),
     HamiltonianCycle(),
-    DeepQLearning(),
+    DeepQLearning(constants.HORZ_TILES * constants.VERT_TILES),
 ]
 
 
