@@ -151,9 +151,9 @@ class Environment:
             return self._tiles[vector.y][vector.x]
         return None
 
-    def observe(self) -> np.ndarray:
+    def observe(self) -> List[float]:
         tiles_1d = []
         for row in self._tiles:
             for t in row:
                 tiles_1d.append(t.value)
-        return np.array(tiles_1d).reshape(1, self._width * self._height)
+        return tiles_1d

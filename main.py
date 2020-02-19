@@ -14,6 +14,7 @@ from game.solvers.hamiltonian_cycle import HamiltonianCycle
 from game.solvers.human import HumanSolver
 from game.scores import ScoreLogger
 from game.trainer import Trainer
+from game.trainers.deep_q_learning import DeepQLearningTrainer
 
 models = [
     HumanSolver(),
@@ -21,6 +22,9 @@ models = [
     BreadthFirstSearchLongestPath(),
     HamiltonianCycle(),
     DeepQLearning(constants.HORZ_TILES * constants.VERT_TILES),
+]
+trainers = [
+    DeepQLearningTrainer(constants.HORZ_TILES * constants.VERT_TILES, 50),
 ]
 
 
@@ -49,19 +53,27 @@ if __name__ == '__main__':
     args = args()
 
     selected_game_model = random.choice(models)
-    for game_model in models:
-        if game_model.short_name in args and vars(args)[game_model.short_name]:
-            selected_game_model = game_model
+    if args.train:
+        for game_model in trainers:
+            if game_model.short_name in args and vars(args)[game_model.short_name]:
+                selected_game_model = game_model
+    else:
+        for game_model in models:
+            if game_model.short_name in args and vars(args)[game_model.short_name]:
+                selected_game_model = game_model
 
     score_logger = ScoreLogger(constants.SCORES_PATH)
 
     if args.train:
-        g = Trainer(
-            selected_game_model,
-            constants.HORZ_TILES,
-            constants.VERT_TILES,
-            score_logger
-        )
+        while True:
+            print('running 1 batch')
+            t = Trainer(
+                selected_game_model,
+                constants.HORZ_TILES,
+                constants.VERT_TILES,
+                score_logger
+            )
+            t.run_batch(50)
     else:
         g = Game(
             game_model=selected_game_model,
@@ -74,8 +86,8 @@ if __name__ == '__main__':
             font=constants.FONT,
             screen_depth=constants.SCREEN_DEPTH
         )
+        play_game = True
+        while play_game:
+            play_game = g.tick()
+        pygame.quit()
 
-    play_game = True
-    while play_game:
-        play_game = g.tick()
-    pygame.quit()

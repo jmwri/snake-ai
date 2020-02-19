@@ -25,15 +25,19 @@ class Trainer:
         self.environment.init_fruit()
         self.environment.init_snake()
 
+    def run_batch(self, batch_size: int):
+        game_i = 0
+        while game_i < batch_size:
+            if not self.tick():
+                game_i += 1
+
     def tick(self) -> bool:
-        continue_game = self._handle_user_input()
-        if not continue_game:
-            return False
         action = self.model.next_action(self.environment)
         terminal = not self.environment.step(action)
-        self.model.after_action(self.environment, terminal)
+        self.model.train_after_action(self.environment, terminal)
         if terminal or self.environment.won():
             self.snake_died()
+            return False
 
         return True
 

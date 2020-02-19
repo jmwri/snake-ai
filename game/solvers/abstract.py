@@ -19,7 +19,7 @@ class AbstractModel(ABC):
         """
         pass
 
-    def after_action(self, environment: Environment, terminal: bool):
+    def train_after_action(self, environment: Environment, terminal: bool):
         """
         Evaluate the environment after our last action
         """
