@@ -1,3 +1,5 @@
+from typing import List
+
 from game.vector import Vector
 
 
@@ -25,3 +27,7 @@ def vector_to_action(vector: Vector) -> Action:
     for a in ALL:
         if a.vector == vector:
             return a
+
+
+def vectors_to_action(vectors: List[Vector]) -> List[Action]:
+    return [vector_to_action(v) for v in vectors]
