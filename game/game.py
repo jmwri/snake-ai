@@ -72,8 +72,10 @@ class Game:
             return False
         action = self.model.next_action(self.environment)
         if not self.environment.step(action):
+            print('died')
             self.snake_died()
-        if self.environment.won():
+        elif self.environment.won():
+            print('won')
             self.snake_died()
         self._sync_screen_with_environment()
         self._draw_screen()

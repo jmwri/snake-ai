@@ -31,3 +31,25 @@ def vector_to_action(vector: Vector) -> Action:
 
 def vectors_to_action(vectors: List[Vector]) -> List[Action]:
     return [vector_to_action(v) for v in vectors]
+
+
+def action_to_relative_left(a: Action) -> Action:
+    if a == RIGHT:
+        return UP
+    elif a == DOWN:
+        return RIGHT
+    elif a == LEFT:
+        return DOWN
+    elif a == UP:
+        return LEFT
+
+
+def action_to_relative_right(a: Action) -> Action:
+    if a == UP:
+        return RIGHT
+    elif a == RIGHT:
+        return DOWN
+    elif a == DOWN:
+        return LEFT
+    elif a == LEFT:
+        return UP
