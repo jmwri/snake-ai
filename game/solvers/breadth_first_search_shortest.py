@@ -3,7 +3,7 @@ from typing import List, Optional
 from game.solvers.abstract import AbstractModel
 from game.environment import action as act, tile
 from game.environment.environment import Environment
-from game.vector import Vector
+from game.vector import Vector, to_direction_vectors
 
 
 class OwnedVector(Vector):
@@ -34,7 +34,7 @@ class BreadthFirstSearchShortestPath(AbstractModel):
             # If we didn't find the fruit, continue straight in hopes a path
             # will be available next tick
             return environment.snake.action
-        next_steps = self.to_direction_vectors(next_vectors)
+        next_steps = to_direction_vectors(next_vectors)
         next_step = next_steps[0]
         # We have the next vector we want to move into
         # Map it to the appropriate action for the snake
@@ -60,12 +60,6 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         # We traversed from fruit to snake, so reverse the list
         vector_steps.reverse()
         return vector_steps
-
-    def to_direction_vectors(self, vectors: List[Vector]) -> List[Vector]:
-        directional_vectors = []
-        for i in range(1, len(vectors)):
-            directional_vectors.append(vectors[i] - vectors[i-1])
-        return directional_vectors
 
     def _search_from(self, env: Environment, start_vector: Vector,
                      end_vector: Vector) -> Optional[OwnedVector]:

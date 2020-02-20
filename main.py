@@ -10,6 +10,7 @@ from game.solvers.breadth_first_search_longest import \
 from game.solvers.breadth_first_search_shortest import \
     BreadthFirstSearchShortestPath
 from game.solvers.hamiltonian_cycle import HamiltonianCycle
+from game.solvers.hamiltonian_cycle_optimised import HamiltonianCycleOptimised
 from game.solvers.human import HumanSolver
 from game.scores import ScoreLogger
 
@@ -18,6 +19,7 @@ models = [
     BreadthFirstSearchShortestPath(),
     BreadthFirstSearchLongestPath(),
     HamiltonianCycle(),
+    HamiltonianCycleOptimised(),
 ]
 
 
@@ -52,8 +54,8 @@ if __name__ == '__main__':
     g = Game(
         game_model=selected_game_model,
         fps=args.fps,
-        horizontal_tiles=constants.HORZ_TILES,
-        vertical_tiles=constants.VERT_TILES,
+        horizontal_tiles=30,
+        vertical_tiles=30,
         screen_width=constants.SCREEN_WIDTH,
         screen_height=constants.SCREEN_HEIGHT,
         score_logger=score_logger,

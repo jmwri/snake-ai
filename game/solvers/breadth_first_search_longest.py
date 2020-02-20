@@ -5,7 +5,7 @@ from game.environment import action as act, tile
 from game.environment.environment import Environment
 from game.solvers.breadth_first_search_shortest import \
     BreadthFirstSearchShortestPath
-from game.vector import Vector
+from game.vector import Vector, to_direction_vectors
 
 
 class BreadthFirstSearchLongestPath(AbstractModel):
@@ -38,8 +38,8 @@ class BreadthFirstSearchLongestPath(AbstractModel):
         # Return the next action in our list
         return self._next_actions.pop(0)
 
-    def build_next_actions(self, env: Environment, from_vector: Vector,
-                           to_vector: Vector) -> Optional[List[act.Action]]:
+    def longest_path(self, env: Environment, from_vector: Vector,
+                     to_vector: Vector) -> Optional[List[Vector]]:
         # Get the shortest path
         shortest_path = self._bfss.shortest_path(
             env,
@@ -55,11 +55,18 @@ class BreadthFirstSearchLongestPath(AbstractModel):
         while len(longest_path) > path_len:
             path_len = len(longest_path)
             longest_path = self._expand_path(env, longest_path, to_vector)
+        return longest_path
+
+    def build_next_actions(self, env: Environment, from_vector: Vector,
+                           to_vector: Vector) -> Optional[List[act.Action]]:
+        longest_path = self.longest_path(env, from_vector, to_vector)
+        if not longest_path:
+            return None
 
         # Map positional vectors to directional vectors
-        next_steps = self._bfss.to_direction_vectors(longest_path)
+        next_steps = to_direction_vectors(longest_path)
         # Map directional vectors to their corresponding actions
-        return [act.vector_to_action(v) for v in next_steps]
+        return act.vectors_to_action(next_steps)
 
     def _expand_path(self, env: Environment, path: List[Vector], goal: Vector
                      ) -> List[Vector]:

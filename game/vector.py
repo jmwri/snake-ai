@@ -1,3 +1,6 @@
+from typing import List
+
+
 class Vector:
     """
     Used as both positional and directional vector
@@ -55,3 +58,10 @@ def is_diagonal(vector: Vector) -> bool:
     Snake can only move on 1 axis at a time.
     """
     return vector.x != 0 and vector.y != 0
+
+
+def to_direction_vectors(vectors: List[Vector]) -> List[Vector]:
+    directional_vectors = []
+    for i in range(1, len(vectors)):
+        directional_vectors.append(vectors[i] - vectors[i-1])
+    return directional_vectors
