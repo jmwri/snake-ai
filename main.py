@@ -54,8 +54,8 @@ if __name__ == '__main__':
     g = Game(
         game_model=selected_game_model,
         fps=args.fps,
-        horizontal_tiles=30,
-        vertical_tiles=30,
+        horizontal_tiles=constants.HORZ_TILES,
+        vertical_tiles=constants.VERT_TILES,
         screen_width=constants.SCREEN_WIDTH,
         screen_height=constants.SCREEN_HEIGHT,
         score_logger=score_logger,
