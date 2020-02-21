@@ -45,6 +45,13 @@ class HamiltonianCycle(AbstractModel):
             head,
             tail
         )
+        if built is None:
+            return None
+
+        # We've built the longest path from head to tail, but we need to
+        # check that it covers all vectors.
+        if len(built) != env.available_tiles_count():
+            return None
         built.append(head)
         return built
 
@@ -66,3 +73,7 @@ class HamiltonianCycle(AbstractModel):
         if self._i == len(self._actions):
             self._i = 0
         return next_action
+
+    def reset(self):
+        self._actions = None
+        self._i = None

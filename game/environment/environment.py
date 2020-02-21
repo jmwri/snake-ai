@@ -137,11 +137,11 @@ class Environment:
             t = self._tiles[rand_x][rand_y]
         return Vector(rand_x, rand_y)
 
-    def _available_tiles_count(self) -> int:
+    def available_tiles_count(self) -> int:
         return (self._width - 2) * (self._height - 2)
 
     def won(self) -> bool:
-        return self.reward() == self._available_tiles_count()
+        return self.reward() == self.available_tiles_count()
 
     def tile_at(self, vector: Vector) -> Optional[tile.Tile]:
         if 0 <= vector.y < self._height and 0 <= vector.x < self._width:
