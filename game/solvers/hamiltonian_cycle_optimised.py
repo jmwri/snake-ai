@@ -60,14 +60,16 @@ class HamiltonianCycleOptimised(AbstractModel):
             v for v in possible_vectors if env.tile_at(v) == tile.EMPTY
         ]
 
-        possible_vectors.sort(
-            key=lambda v: self._vectors.index(v),
-            reverse=True
-        )
-
         head_i = self._vectors.index(env.snake.head())
         tail_i = self._vectors.index(env.snake.tail())
         fruit_i = self._vectors.index(env.fruit.get_vector())
+
+        # Sort possible_vectors so that the most valuable shortcut is first
+        fruit_is_higher_in_vectors = fruit_i > head_i
+        possible_vectors.sort(
+            key=lambda v: self._vectors.index(v),
+            reverse=fruit_is_higher_in_vectors
+        )
 
         s = self._safety(env.snake.length(), len(self._vectors))
         for v in possible_vectors:
