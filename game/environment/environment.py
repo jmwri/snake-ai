@@ -1,6 +1,6 @@
 import random
 from typing import Optional, List
-from game.environment import action as act, tile
+from game.environment import action as act, tile, death_reason
 from game.environment.objects import Snake, Fruit, Object
 from game.vector import Vector, within_distance, is_diagonal
 
@@ -23,7 +23,7 @@ class Environment:
             for x in range(0, self._width):
                 self._tiles[y].append(tile.EMPTY)
 
-    def step(self, action: act.Action) -> bool:
+    def step(self, action: act.Action) -> Optional[death_reason.DeathReason]:
         """
         :param action: The action for the snake to perform
         :return: False if the move resulted in death, otherwise True
@@ -31,13 +31,13 @@ class Environment:
         # Eliminate illegal moves
         if self.snake.action.vector.is_reverse(action.vector):
             # Snake's head can't go backwards
-            return False
+            return death_reason.ILLEGAL_BACKWARDS
         if not within_distance(action.vector, 1):
             # Attempted action is > 1 tile away
-            return False
+            return death_reason.ILLEGAL_TOO_FAR
         if is_diagonal(action.vector):
             # Our snake can only move on 1 axis at a time
-            return False
+            return death_reason.ILLEGAL_DIAGONAL
 
         # Specified action is a legal move, but can still kill the snake
         head = self.snake.head()
@@ -48,10 +48,10 @@ class Environment:
 
         if self.snake.at_vector(new):
             # New position is populated by snake
-            return False
+            return death_reason.HIT_SNAKE
         if self.wall.at_vector(new):
             # New position is populated by wall
-            return False
+            return death_reason.HIT_WALL
 
         # Nothing bad ahead, move the head of the snake
         self.snake.action = action
@@ -63,12 +63,12 @@ class Environment:
         if can_eat:
             if not self.won():
                 self.init_fruit()
-            return True
+            return None
 
         # There was no fruit, so remove 1 tile from the tail
         tail = self.snake.remove_tail()
         self._tiles[tail.y][tail.x] = tile.EMPTY
-        return True
+        return None
 
     def reward(self) -> int:
         return len(self.snake)

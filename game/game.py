@@ -71,8 +71,9 @@ class Game:
         if not continue_game:
             return False
         action = self.model.next_action(self.environment)
-        if not self.environment.step(action):
-            print('died')
+        reason = self.environment.step(action)
+        if reason:
+            print(f'died: {reason.reason}')
             self.snake_died()
         elif self.environment.won():
             print('won')
