@@ -72,18 +72,26 @@ class HamiltonianCycleOptimised(AbstractModel):
         )
 
         s = self._safety(env.snake.length(), len(self._vectors))
+        diff_between_head_tail = self._tiles_between(head_i, tail_i)
+        if s > diff_between_head_tail:
+            s = diff_between_head_tail
+        tail_i -= s
+        if tail_i < 0:
+            tail_i = len(self._vectors) - abs(tail_i)
+
         for v in possible_vectors:
             i = self._vectors.index(v)
 
             if i == head_i + 1:
                 # Is next space
                 continue
+
             # If head_i = 20, tail_i = 10, and i is between 10 to 20
-            if head_i >= tail_i and tail_i + s < i <= head_i + 1:
+            if head_i > tail_i and tail_i < i <= head_i:
                 # Shortcut would hit snake
                 continue
             # If head_i = 4, tail_i = 80, and i is between 80+ and 4-
-            if head_i < tail_i + s < i:
+            if head_i < tail_i < i:
                 # Shortcut would hit snake
                 continue
             # If head_i = 40, fruit_i = 50, and i > 50
@@ -107,11 +115,24 @@ class HamiltonianCycleOptimised(AbstractModel):
             return act.vector_to_action(v - env.snake.head())
         return None
 
+    def _tiles_between(self, from_i: int, to_i: int) -> int:
+        if to_i > from_i:
+            return to_i - from_i
+        else:
+            return (len(self._vectors) - from_i) + to_i
+
     def _safety(self, snake_len: int, path_len: int) -> int:
+        """
+        Return a number to restrict the amount of tiles that the snake
+        can take as a shortcut.
+        The algorithm is based on the length of the snake, and the total
+        amount of tiles.
+        As the snake gets longer it will take less shortcuts.
+        """
         x1 = (path_len * .04) / path_len  # Point at which the safety starts
         x2 = (path_len * .8) / path_len  # Point at which to use max safety
-        s1 = path_len * .1  # Max safety
-        s2 = path_len * .01  # Min safety
+        s1 = path_len * .01  # Min safety
+        s2 = path_len * .25  # Max safety
         m = (s1 - s2)/(x1 - x2)
         y = snake_len/path_len
         c = (s2*x1 - s1*x2)/(x1-x2)
