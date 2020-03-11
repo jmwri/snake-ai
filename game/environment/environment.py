@@ -106,7 +106,17 @@ class Environment:
         random_position = self._random_available_position()
         self._tiles[random_position.x][random_position.y] = tile.SNAKE
         self.snake = Snake([self._vector_of(tile.SNAKE)])
-        self.snake.action = random.choice(act.ALL)
+        self.snake.action = self._random_action()
+
+    def _random_action(self) -> act.Action:
+        possible_actions = []
+        for a in act.ALL:
+            if self.tile_at(self.snake.head() + a.vector) == tile.WALL:
+                continue
+            if self.tile_at(self.snake.head() + a.vector) == tile.SNAKE:
+                continue
+            possible_actions.append(a)
+        return random.choice(possible_actions)
 
     def _vectors_of(self, t: tile.Tile) -> List[Vector]:
         vectors = []
