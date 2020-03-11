@@ -39,12 +39,14 @@ class BreadthFirstSearchLongestPath(AbstractModel):
         return self._next_actions.pop(0)
 
     def longest_path(self, env: Environment, from_vector: Vector,
-                     to_vector: Vector) -> Optional[List[Vector]]:
+                     to_vector: Vector, first_move: Vector
+                     ) -> Optional[List[Vector]]:
         # Get the shortest path
         shortest_path = self._bfss.shortest_path(
             env,
             from_vector,
-            to_vector
+            to_vector,
+            first_move
         )
         if not shortest_path:
             return None
@@ -59,7 +61,12 @@ class BreadthFirstSearchLongestPath(AbstractModel):
 
     def build_next_actions(self, env: Environment, from_vector: Vector,
                            to_vector: Vector) -> Optional[List[act.Action]]:
-        longest_path = self.longest_path(env, from_vector, to_vector)
+        longest_path = self.longest_path(
+            env,
+            from_vector,
+            to_vector,
+            env.snake.action.vector
+        )
         if not longest_path:
             return None
 

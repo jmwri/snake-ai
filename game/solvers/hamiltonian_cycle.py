@@ -39,11 +39,11 @@ class HamiltonianCycle(AbstractModel):
             else:
                 adjustment = Vector(1, 0)
             tail = tail + adjustment
-
         built = self._bfsl.longest_path(
             env,
             head,
-            tail
+            tail,
+            env.snake.action.vector
         )
         if built is None:
             return None

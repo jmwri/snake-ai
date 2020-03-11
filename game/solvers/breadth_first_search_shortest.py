@@ -28,7 +28,8 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         next_vectors = self.shortest_path(
             environment,
             environment.snake.head(),
-            environment.fruit.get_vector()
+            environment.fruit.get_vector(),
+            environment.snake.action.vector
         )
         if not next_vectors:
             # If we didn't find the fruit, continue straight in hopes a path
@@ -41,13 +42,14 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         return act.vector_to_action(next_step)
 
     def shortest_path(self, environment: Environment, from_vector: Vector,
-                      to_vector: Vector) -> Optional[List[Vector]]:
+                      to_vector: Vector, first_move: Vector
+                      ) -> Optional[List[Vector]]:
         # Search for path for fruit. Returned vector has the next vector.
         fruit_vector = self._search_from(
             environment,
             from_vector,
             to_vector,
-            environment.snake.action.vector
+            first_move
         )
         if fruit_vector is None:
             return None
