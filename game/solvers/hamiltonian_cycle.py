@@ -26,7 +26,6 @@ class HamiltonianCycle(AbstractModel):
         # Attempt to build the list of next actions
         head = env.snake.head()
         tail = env.snake.tail()
-        adjustment = None
         # We build a cycle by building the longest path from the snakes
         # head to it's tail. If the snake is only 1 tile long, then we
         # make an 'adjustment' and choose a tile next to the head

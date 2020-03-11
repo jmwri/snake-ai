@@ -1,10 +1,10 @@
-from typing import Optional, List
+from typing import Optional
 
 from game.solvers.abstract import AbstractModel
 from game.environment import action as act, tile
 from game.environment.environment import Environment
 from game.solvers.hamiltonian_cycle import HamiltonianCycle
-from game.vector import Vector, to_direction_vectors
+from game.vector import to_direction_vectors
 
 
 class HamiltonianCycleOptimised(AbstractModel):

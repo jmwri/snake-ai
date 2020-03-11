@@ -76,7 +76,6 @@ class BreadthFirstSearchShortestPath(AbstractModel):
         # Our environment sets the snakes first move, and the snake can't
         # go backwards.
         is_first_move = True
-        illegal_first_move = start_vector + first_move.reverse()
 
         while queue:
             # Get the first vector from the queue
@@ -92,7 +91,7 @@ class BreadthFirstSearchShortestPath(AbstractModel):
             )
             # Add each adjacent vector to the queue
             for v in adjacent_vectors:
-                if is_first_move and v == illegal_first_move:
+                if is_first_move and v.is_reverse(first_move):
                     continue
                 queue.append(OwnedVector(v.x, v.y, vector))
                 seen_vectors.append(v)
