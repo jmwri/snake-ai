@@ -115,3 +115,10 @@ class HamiltonianCycleOptimised(AbstractModel):
         c = (s2*x1 - s1*x2)/(x1-x2)
         s = round(m * y + c)
         return s
+
+    def reset(self):
+        super().reset()
+        self._hc.reset()
+        self._vectors = []
+        self._actions = []
+        self._i = 0

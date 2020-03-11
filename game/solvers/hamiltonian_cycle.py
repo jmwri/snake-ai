@@ -74,5 +74,6 @@ class HamiltonianCycle(AbstractModel):
         return next_action
 
     def reset(self):
-        self._actions = None
-        self._i = None
+        self._bfsl.reset()
+        self._actions = []
+        self._i = 0
