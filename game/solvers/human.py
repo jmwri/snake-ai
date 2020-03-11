@@ -12,7 +12,7 @@ class HumanSolver(AbstractModel):
 
     def next_action(self, environment: Environment) -> act.Action:
         # If there was no user input, return the current action of the snake
-        if self._action is act.NONE:
+        if self._action == act.NONE:
             return environment.snake.action
         # If the user tried to go backwards, ignore it
         backward_action = self._action.vector.is_reverse(

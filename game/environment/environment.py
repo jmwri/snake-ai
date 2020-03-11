@@ -141,7 +141,7 @@ class Environment:
     def _random_available_position(self) -> Vector:
         t = None
         rand_x, rand_y = 0, 0
-        while t is None or t is not tile.EMPTY:
+        while t is None or t != tile.EMPTY:
             rand_x = random.randint(1, self._height - 1)
             rand_y = random.randint(1, self._width - 1)
             t = self._tiles[rand_x][rand_y]

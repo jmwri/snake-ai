@@ -106,9 +106,9 @@ class BreadthFirstSearchLongestPath(AbstractModel):
     def _can_populate_vector(self, env: Environment, vector: Vector,
                              path: List[Vector], goal: Vector) -> bool:
         t = env.tile_at(vector)
-        if t is tile.WALL:
+        if t == tile.WALL:
             return False
-        if t is tile.SNAKE:
+        if t == tile.SNAKE:
             return False
         if vector in path:
             return False
