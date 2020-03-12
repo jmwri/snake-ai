@@ -79,6 +79,8 @@ class BreadthFirstSearchLongestPath(AbstractModel):
                      ) -> List[Vector]:
         # Get a copy of the path
         longest_path = [v for v in path]
+        # This HAS to be 0. In the case where the snake hasn't eaten the path
+        # is from head to tail.
         i = 0
         while i < len(path) - 1:
             a = longest_path[i]
@@ -86,17 +88,19 @@ class BreadthFirstSearchLongestPath(AbstractModel):
             # Calculate which direction the step is in
             direction = b - a
 
+            dir_action = act.vector_to_action(direction)
+
             # Rotate the direction, and check if there are 2 spaces clear
-            rotated_dir = direction.rotate()
+            rotated_l = act.action_to_relative_left(dir_action)
             if self._extend_if_possible(
-                    env, a, b, rotated_dir,
+                    env, a, b, rotated_l.vector,
                     longest_path, i, goal):
                 break
 
             # Check the 2 spaces on the opposite side
-            rotated_dir = rotated_dir.reverse()
+            rotated_r = act.action_to_relative_left(dir_action)
             if self._extend_if_possible(
-                    env, a, b, rotated_dir,
+                    env, a, b, rotated_r.vector,
                     longest_path, i, goal):
                 break
             i += 1
@@ -128,6 +132,7 @@ class BreadthFirstSearchLongestPath(AbstractModel):
                             goal: Vector) -> bool:
         a_adjacent = a + rotation
         b_adjacent = b + rotation
+
         if self._can_populate_vectors(env, a_adjacent, b_adjacent,
                                       path, goal):
             path.insert(i + 1, b_adjacent)

@@ -27,6 +27,7 @@ def vector_to_action(vector: Vector) -> Action:
     for a in ALL:
         if a.vector == vector:
             return a
+    raise Exception(f'vector {vector} does not map to an action')
 
 
 def vectors_to_action(vectors: List[Vector]) -> List[Action]:

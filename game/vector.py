@@ -18,9 +18,6 @@ class Vector:
     def reverse(self) -> 'Vector':
         return Vector(-self.x, -self.y)
 
-    def rotate(self) -> 'Vector':
-        return Vector(self.y, self.x)
-
     def is_reverse(self, other: 'Vector') -> bool:
         return self.reverse() == other
 

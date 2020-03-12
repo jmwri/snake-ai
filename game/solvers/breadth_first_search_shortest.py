@@ -73,9 +73,6 @@ class BreadthFirstSearchShortestPath(AbstractModel):
                      ) -> Optional[OwnedVector]:
         seen_vectors = [start_vector]  # Don't process more than once
         queue = [start_vector]  # First-in-first-out queue
-        # Our environment sets the snakes first move, and the snake can't
-        # go backwards.
-        is_first_move = True
 
         while queue:
             # Get the first vector from the queue
@@ -91,11 +88,12 @@ class BreadthFirstSearchShortestPath(AbstractModel):
             )
             # Add each adjacent vector to the queue
             for v in adjacent_vectors:
-                if is_first_move and v.is_reverse(first_move):
-                    continue
+                if vector == start_vector:
+                    dir_vec = v - vector
+                    if first_move.is_reverse(dir_vec):
+                        continue
                 queue.append(OwnedVector(v.x, v.y, vector))
                 seen_vectors.append(v)
-            is_first_move = False
 
     def _unseen_adjacent_vectors(self, env: Environment, vector: Vector,
                                  seen_vectors: List[Vector]) -> List[Vector]:
