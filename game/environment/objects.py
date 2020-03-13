@@ -47,9 +47,15 @@ class Snake(Object):
     def __len__(self) -> int:
         return self._length
 
-    def move_to(self, vector: Vector):
+    def move_to(self, vector: Vector) -> bool:
+        if self.at_vector(vector):
+            return False
+        diff = vector - self.head()
+        if abs(diff.x) > 1 or abs(diff.y) > 1:
+            return False
         self._vectors.insert(0, vector)
         self._length += 1
+        return True
 
     def remove_tail(self) -> Vector:
         self._length -= 1
