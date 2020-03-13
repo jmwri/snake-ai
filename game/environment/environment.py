@@ -106,9 +106,9 @@ class Environment:
         random_position = self._random_available_position()
         self._tiles[random_position.x][random_position.y] = tile.SNAKE
         self.snake = Snake([self._vector_of(tile.SNAKE)])
-        self.snake.action = self._random_action()
+        self.snake.action = self.random_action()
 
-    def _random_action(self) -> act.Action:
+    def random_action(self) -> act.Action:
         possible_actions = []
         for a in act.ALL:
             if self.tile_at(self.snake.head() + a.vector) == tile.WALL:

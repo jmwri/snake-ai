@@ -1,7 +1,7 @@
 from typing import Optional, List
 
 from game.solvers.abstract import AbstractModel
-from game.environment import action as act
+from game.environment import action as act, tile
 from game.environment.environment import Environment
 from game.solvers.breadth_first_search_longest import \
     BreadthFirstSearchLongestPath
@@ -60,7 +60,9 @@ class HamiltonianCycle(AbstractModel):
             cycle_vectors = self.build_cycle(environment)
             if not cycle_vectors:
                 # If we're not able to build them, it usually means there
-                # is no path to the fruit. Continue straight.
+                # is no path to the fruit. Continue to any available position.
+                if environment.tile_at(environment.snake.head() + environment.snake.action.vector) != tile.EMPTY:
+                    return environment.random_action()
                 return environment.snake.action
             cycle_action_vectors = to_direction_vectors(cycle_vectors)
             self._actions = act.vectors_to_action(cycle_action_vectors)
