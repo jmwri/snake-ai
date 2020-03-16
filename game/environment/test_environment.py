@@ -1,5 +1,5 @@
 from unittest import TestCase
-from game.environment import objects, environment, tile
+from game.environment import objects, environment, tile, action
 from game.vector import Vector
 
 
@@ -52,7 +52,66 @@ class TestEnvironment(TestCase):
                     self.assertEqual(t, tile.EMPTY)
 
     def test_random_action(self):
-        pass
+        e = environment.Environment(5, 5)
+        test_cases = [
+            {
+                'desc': 'Top right to top left',
+                'vectors': [Vector(1, 1), Vector(2, 1), Vector(3, 1)],
+                'snake_action': action.LEFT,
+                'valid_actions': [action.DOWN],
+            }, {
+                'desc': 'Top left to bottom left',
+                'vectors': [Vector(1, 3), Vector(1, 2), Vector(1, 1)],
+                'snake_action': action.DOWN,
+                'valid_actions': [action.RIGHT],
+            }, {
+                'desc': 'Bottom left to bottom right',
+                'vectors': [Vector(3, 3), Vector(2, 3), Vector(1, 3)],
+                'snake_action': action.RIGHT,
+                'valid_actions': [action.UP],
+            }, {
+                'desc': 'Bottom right to top right',
+                'vectors': [Vector(3, 1), Vector(3, 2), Vector(3, 3)],
+                'snake_action': action.UP,
+                'valid_actions': [action.LEFT],
+            }, {
+                'desc': 'Bottom middle to middle',
+                'vectors': [Vector(2, 2), Vector(2, 3)],
+                'snake_action': action.UP,
+                'valid_actions': [action.LEFT, action.UP, action.RIGHT],
+            }, {
+                'desc': 'Left middle to middle',
+                'vectors': [Vector(2, 2), Vector(1, 2)],
+                'snake_action': action.RIGHT,
+                'valid_actions': [action.DOWN, action.UP, action.RIGHT],
+            }, {
+                'desc': 'Top middle to middle',
+                'vectors': [Vector(2, 2), Vector(2, 1)],
+                'snake_action': action.DOWN,
+                'valid_actions': [action.DOWN, action.LEFT, action.RIGHT],
+            }, {
+                'desc': 'Right middle to middle',
+                'vectors': [Vector(2, 2), Vector(3, 2)],
+                'snake_action': action.LEFT,
+                'valid_actions': [action.DOWN, action.LEFT, action.UP],
+            },
+        ]
+        e.init_wall()
+        for test_case in test_cases:
+            e.init_snake(test_case['vectors'], test_case['snake_action'])
+            valid_act_descs = [
+                a.description for a in test_case['valid_actions']
+            ]
+            seen_actions = []
+
+            # For each test case assert that all of our valid actions
+            # are selected at least once
+            for i in range(20):
+                rand_act = e.random_action()
+                if rand_act.description not in seen_actions:
+                    seen_actions.append(rand_act.description)
+                self.assertIn(rand_act.description, valid_act_descs)
+            self.assertEqual(len(seen_actions), len(valid_act_descs))
 
     def test_available_tiles_count(self):
         pass

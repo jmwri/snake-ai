@@ -100,13 +100,18 @@ class Environment:
         self._tiles[random_position.x][random_position.y] = tile.FRUIT
         self.fruit = Fruit(self._vector_of(tile.FRUIT))
 
-    def init_snake(self):
+    def init_snake(self, vectors: List[Vector] = None,
+                   action: act.Action = None):
         # Place a new snake at a random position
         self._clear_tiles(tile.SNAKE)
-        random_position = self._random_available_position()
-        self._tiles[random_position.x][random_position.y] = tile.SNAKE
-        self.snake = Snake([self._vector_of(tile.SNAKE)])
-        self.snake.action = self.random_action()
+        if vectors is None:
+            vectors = [self._random_available_position()]
+        for v in vectors:
+            self._tiles[v.y][v.x] = tile.SNAKE
+        self.snake = Snake(vectors)
+        if action is None:
+            action = self.random_action()
+        self.snake.action = action
 
     def random_action(self) -> act.Action:
         possible_actions = []
